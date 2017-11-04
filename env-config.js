@@ -1,5 +1,5 @@
 // @flow
-const package = require('./package.json');
+const packageJson = require('./package.json');
 const { URL } = require('url');
 
 // https://github.com/FormidableLabs/babel-plugin-transform-define
@@ -15,7 +15,7 @@ const production = process.env.NODE_ENV === 'production';
 const SENTRY_SERVER_DNS = process.env.SENTRY_SERVER_DNS || '';
 
 module.exports = {
-  APP_NAME: package.name,
+  APP_NAME: packageJson.name,
   APP_VERSION: process.env.APP_VERSION || 'dev', // Git commit SHA.
   DEFAULT_LOCALE: 'en',
   // TODO: Read it from graphcool/.graphcoolrc and copy it here and to
