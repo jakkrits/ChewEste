@@ -21,8 +21,8 @@ module.exports = {
   // TODO: Read it from graphcool/.graphcoolrc and copy it here and to
   // .graphqlconfig as well.
   GRAPHQL_ENDPOINT: production
-    ? 'https://api.graph.cool/relay/v1/cj9dlwn7x1s9s01572c1qfriu'
-    : 'https://api.graph.cool/relay/v1/cj9dlwn7x1s9s01572c1qfriu',
+    ? 'https://api.graph.cool/relay/v1/cj7t906mb0qhv01110vehq34w'
+    : 'https://api.graph.cool/relay/v1/cj7t906mb0qhv01110vehq34w',
   HOSTNAME: process.env.NOW_URL
     ? new URL(process.env.NOW_URL).hostname
     : 'localhost:3000/',

@@ -1,7 +1,47 @@
+type File @model {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  owner: User @relation(name: "ImageOwner")
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+}
+
+type Timesheet @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  updatedAt: DateTime!
+  workday: DateTime
+  user: User @relation(name: "UserTimesheets")
+}
+
 type User @model {
   id: ID! @isUnique
   createdAt: DateTime!
   updatedAt: DateTime!
+  firstName: String
+  lastName: String
+  nickName: String
+  image: File @relation(name: "ImageOwner")
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
+  employedDate: DateTime
+  idCardNumber: String
+  leaveWithPay: Int
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  role: UserRole
+  timesheets: [Timesheet!]! @relation(name: "UserTimesheets")
   email: String @isUnique
   password: String
   webs: [Web!]! @relation(name: "UserWebs")
@@ -14,4 +54,45 @@ type Web @model {
   domain: String! @isUnique
   name: String!
   owner: User! @relation(name: "UserWebs")
+}
+
+enum Branch {
+  BAN_KOH
+  SAVE_ONE
+  KHON_KHAN
+}
+
+enum Department {
+  SERVER
+  KITCHEN
+  DISHWASHER
+  DAILY
+  MANAGER
+  OWNER
+}
+
+enum Shift {
+  MORNING
+  MID
+  GRAVEYARD
+}
+
+enum TimesheetCode {
+  R
+  OT
+  H
+  H1
+  V
+  L
+  L1
+  S
+  S1
+  A
+  A1
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  MANAGER
 }

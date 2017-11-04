@@ -44,3 +44,14 @@ permissions:
     authenticated: true
     query: permissions/Web.graphql:delete
   - operation: UserWebs.*
+
+  - operation: File.read
+  - operation: File.create
+  - operation: File.update
+  - operation: File.delete
+  - operation: Timesheet.read
+  - operation: Timesheet.create
+  - operation: Timesheet.update
+  - operation: Timesheet.delete
+  - operation: ImageOwner.*
+  - operation: UserTimesheets.*
