@@ -1,5 +1,23 @@
-# source: https://api.graph.cool/relay/v1/cj7t906mb0qhv01110vehq34w
-# timestamp: Mon Oct 30 2017 04:11:49 GMT+0100 (CET)
+input AddToImageOwnerUserInput {
+  imageFileId: ID!
+  ownerUserId: ID!
+  clientMutationId: String!
+}
+
+type AddToUserTimesheetsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  userUser: User
+  timesheetsTimesheet: Timesheet
+  userUserEdge: UserEdge
+  timesheetsTimesheetEdge: TimesheetEdge
+}
+
+input AddToUserTimesheetsUserInput {
+  timesheetsTimesheetId: ID!
+  userUserId: ID!
+  clientMutationId: String!
+}
 
 type AddToUserWebsPayload {
   viewer: Viewer!
@@ -22,9 +40,82 @@ type AuthenticateUserPayload {
   token: String!
 }
 
+enum Branch {
+  BAN_KOH
+  SAVE_ONE
+  KHON_KHAN
+}
+
+input CreateFile {
+  name: String!
+  ownerId: ID
+  owner: FileownerUser
+}
+
+input CreateFileInput {
+  name: String!
+  ownerId: ID
+  owner: FileownerUser
+  clientMutationId: String!
+}
+
+type CreateFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+  owner: User
+}
+
+input CreateTimesheet {
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  workday: DateTime
+  userId: ID
+  user: TimesheetuserUser
+}
+
+input CreateTimesheetInput {
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  workday: DateTime
+  userId: ID
+  user: TimesheetuserUser
+  clientMutationId: String!
+}
+
+type CreateTimesheetPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  timesheet: Timesheet
+  edge: TimesheetEdge
+  user: User
+}
+
 input CreateUser {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
   email: String
+  employedDate: DateTime
+  firstName: String
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
   password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  imageId: ID
+  image: UserimageFile
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
   websIds: [ID!]
   webs: [UserwebsWeb!]
 }
@@ -61,6 +152,34 @@ type CreateWebPayload {
 
 scalar DateTime
 
+input DeleteFileInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+  owner: User
+  deletedId: ID
+}
+
+input DeleteTimesheetInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteTimesheetPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  timesheet: Timesheet
+  edge: TimesheetEdge
+  user: User
+  deletedId: ID
+}
+
 input DeleteUserInput {
   id: ID!
   clientMutationId: String!
@@ -71,6 +190,7 @@ type DeleteUserPayload {
   clientMutationId: String!
   user: User
   edge: UserEdge
+  image: File
   deletedId: ID
 }
 
@@ -88,186 +208,94 @@ type DeleteWebPayload {
   deletedId: ID
 }
 
-# LoggedInUserPayload
-type LoggedInUserPayload {
-  id: ID!
+enum Department {
+  SERVER
+  KITCHEN
+  DISHWASHER
+  DAILY
+  MANAGER
+  OWNER
 }
 
-type Mutation {
-  createWeb(input: CreateWebInput!): CreateWebPayload
-  updateUser(input: UpdateUserInput!): UpdateUserPayload
-  updateWeb(input: UpdateWebInput!): UpdateWebPayload
-  updateOrCreateUser(input: UpdateOrCreateUserInput!): UpdateOrCreateUserPayload
-  updateOrCreateWeb(input: UpdateOrCreateWebInput!): UpdateOrCreateWebPayload
-  deleteUser(input: DeleteUserInput!): DeleteUserPayload
-  deleteWeb(input: DeleteWebInput!): DeleteWebPayload
-  addToUserWebs(input: AddToUserWebsUserInput!): AddToUserWebsPayload
-  createUser(input: SignupUserInput!): CreateUserPayload!
-
-  # authenticate
-  authenticateUser(email: String!, password: String!): AuthenticateUserPayload
-
-  # signup
-  signupUser(email: String!, password: String!): SignupUserPayload
-}
-
-# An object with an ID
-interface Node {
-  # The id of the object.
-  id: ID!
-}
-
-# Information about pagination in a connection.
-type PageInfo {
-  # When paginating forwards, are there more items?
-  hasNextPage: Boolean!
-
-  # When paginating backwards, are there more items?
-  hasPreviousPage: Boolean!
-
-  # When paginating backwards, the cursor to continue.
-  startCursor: String
-
-  # When paginating forwards, the cursor to continue.
-  endCursor: String
-}
-
-type Query {
-  viewer: Viewer!
-
-  # Fetches an object given its ID
-  node(
-    # The ID of an object
-    id: ID!
-  ): Node
-}
-
-input SignupUserInput {
-  email: String
-  password: String
-  websIds: [ID!]
-  webs: [UserwebsWeb!]
-  clientMutationId: String!
-}
-
-# SignupUserPayload
-type SignupUserPayload {
-  id: ID!
-  token: String!
-}
-
-input UpdateOrCreateUserInput {
-  update: UpdateUser!
-  create: CreateUser!
-  clientMutationId: String!
-}
-
-type UpdateOrCreateUserPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  user: User
-  edge: UserEdge
-}
-
-input UpdateOrCreateWebInput {
-  update: UpdateWeb!
-  create: CreateWeb!
-  clientMutationId: String!
-}
-
-type UpdateOrCreateWebPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  web: Web
-  edge: WebEdge
-  owner: User
-}
-
-input UpdateUser {
-  email: String
-  id: ID!
-  password: String
-  websIds: [ID!]
-  webs: [UserwebsWeb!]
-}
-
-input UpdateUserInput {
-  email: String
-  id: ID!
-  password: String
-  websIds: [ID!]
-  webs: [UserwebsWeb!]
-  clientMutationId: String!
-}
-
-type UpdateUserPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  user: User
-  edge: UserEdge
-}
-
-input UpdateWeb {
-  domain: String
-  id: ID!
-  name: String
-  ownerId: ID
-  owner: WebownerUser
-}
-
-input UpdateWebInput {
-  domain: String
-  id: ID!
-  name: String
-  ownerId: ID
-  owner: WebownerUser
-  clientMutationId: String!
-}
-
-type UpdateWebPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  web: Web
-  edge: WebEdge
-  owner: User
-}
-
-type User implements Node {
+type File implements Node {
+  contentType: String!
   createdAt: DateTime!
-  email: String
   id: ID!
-  password: String
+  name: String!
+  owner(filter: UserFilter): User
+  secret: String!
+  size: Int!
   updatedAt: DateTime!
-  webs(filter: WebFilter, orderBy: WebOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): WebConnection
+  url: String!
 }
 
 # A connection to a list of items.
-type UserConnection {
+type FileConnection {
   # Information to aid in pagination.
   pageInfo: PageInfo!
 
   # A list of edges.
-  edges: [UserEdge]
+  edges: [FileEdge]
 
   # Count of filtered result set without considering pagination arguments
   count: Int!
 }
 
 # An edge in a connection.
-type UserEdge {
+type FileEdge {
   # The item at the end of the edge.
-  node: User!
+  node: File!
 
   # A cursor for use in pagination.
   cursor: String!
 }
 
-input UserFilter {
+input FileFilter {
   # Logical AND on all given filters.
-  AND: [UserFilter!]
+  AND: [FileFilter!]
 
   # Logical OR on all given filters.
-  OR: [UserFilter!]
+  OR: [FileFilter!]
+  contentType: String
+
+  # All values that are not equal to given value.
+  contentType_not: String
+
+  # All values that are contained in given list.
+  contentType_in: [String!]
+
+  # All values that are not contained in given list.
+  contentType_not_in: [String!]
+
+  # All values less than the given value.
+  contentType_lt: String
+
+  # All values less than or equal the given value.
+  contentType_lte: String
+
+  # All values greater than the given value.
+  contentType_gt: String
+
+  # All values greater than or equal the given value.
+  contentType_gte: String
+
+  # All values containing the given string.
+  contentType_contains: String
+
+  # All values not containing the given string.
+  contentType_not_contains: String
+
+  # All values starting with the given string.
+  contentType_starts_with: String
+
+  # All values not starting with the given string.
+  contentType_not_starts_with: String
+
+  # All values ending with the given string.
+  contentType_ends_with: String
+
+  # All values not ending with the given string.
+  contentType_not_ends_with: String
   createdAt: DateTime
 
   # All values that are not equal to given value.
@@ -290,46 +318,6 @@ input UserFilter {
 
   # All values greater than or equal the given value.
   createdAt_gte: DateTime
-  email: String
-
-  # All values that are not equal to given value.
-  email_not: String
-
-  # All values that are contained in given list.
-  email_in: [String!]
-
-  # All values that are not contained in given list.
-  email_not_in: [String!]
-
-  # All values less than the given value.
-  email_lt: String
-
-  # All values less than or equal the given value.
-  email_lte: String
-
-  # All values greater than the given value.
-  email_gt: String
-
-  # All values greater than or equal the given value.
-  email_gte: String
-
-  # All values containing the given string.
-  email_contains: String
-
-  # All values not containing the given string.
-  email_not_contains: String
-
-  # All values starting with the given string.
-  email_starts_with: String
-
-  # All values not starting with the given string.
-  email_not_starts_with: String
-
-  # All values ending with the given string.
-  email_ends_with: String
-
-  # All values not ending with the given string.
-  email_not_ends_with: String
   id: ID
 
   # All values that are not equal to given value.
@@ -370,6 +358,1273 @@ input UserFilter {
 
   # All values not ending with the given string.
   id_not_ends_with: ID
+  name: String
+
+  # All values that are not equal to given value.
+  name_not: String
+
+  # All values that are contained in given list.
+  name_in: [String!]
+
+  # All values that are not contained in given list.
+  name_not_in: [String!]
+
+  # All values less than the given value.
+  name_lt: String
+
+  # All values less than or equal the given value.
+  name_lte: String
+
+  # All values greater than the given value.
+  name_gt: String
+
+  # All values greater than or equal the given value.
+  name_gte: String
+
+  # All values containing the given string.
+  name_contains: String
+
+  # All values not containing the given string.
+  name_not_contains: String
+
+  # All values starting with the given string.
+  name_starts_with: String
+
+  # All values not starting with the given string.
+  name_not_starts_with: String
+
+  # All values ending with the given string.
+  name_ends_with: String
+
+  # All values not ending with the given string.
+  name_not_ends_with: String
+  secret: String
+
+  # All values that are not equal to given value.
+  secret_not: String
+
+  # All values that are contained in given list.
+  secret_in: [String!]
+
+  # All values that are not contained in given list.
+  secret_not_in: [String!]
+
+  # All values less than the given value.
+  secret_lt: String
+
+  # All values less than or equal the given value.
+  secret_lte: String
+
+  # All values greater than the given value.
+  secret_gt: String
+
+  # All values greater than or equal the given value.
+  secret_gte: String
+
+  # All values containing the given string.
+  secret_contains: String
+
+  # All values not containing the given string.
+  secret_not_contains: String
+
+  # All values starting with the given string.
+  secret_starts_with: String
+
+  # All values not starting with the given string.
+  secret_not_starts_with: String
+
+  # All values ending with the given string.
+  secret_ends_with: String
+
+  # All values not ending with the given string.
+  secret_not_ends_with: String
+  size: Int
+
+  # All values that are not equal to given value.
+  size_not: Int
+
+  # All values that are contained in given list.
+  size_in: [Int!]
+
+  # All values that are not contained in given list.
+  size_not_in: [Int!]
+
+  # All values less than the given value.
+  size_lt: Int
+
+  # All values less than or equal the given value.
+  size_lte: Int
+
+  # All values greater than the given value.
+  size_gt: Int
+
+  # All values greater than or equal the given value.
+  size_gte: Int
+  updatedAt: DateTime
+
+  # All values that are not equal to given value.
+  updatedAt_not: DateTime
+
+  # All values that are contained in given list.
+  updatedAt_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  updatedAt_not_in: [DateTime!]
+
+  # All values less than the given value.
+  updatedAt_lt: DateTime
+
+  # All values less than or equal the given value.
+  updatedAt_lte: DateTime
+
+  # All values greater than the given value.
+  updatedAt_gt: DateTime
+
+  # All values greater than or equal the given value.
+  updatedAt_gte: DateTime
+  url: String
+
+  # All values that are not equal to given value.
+  url_not: String
+
+  # All values that are contained in given list.
+  url_in: [String!]
+
+  # All values that are not contained in given list.
+  url_not_in: [String!]
+
+  # All values less than the given value.
+  url_lt: String
+
+  # All values less than or equal the given value.
+  url_lte: String
+
+  # All values greater than the given value.
+  url_gt: String
+
+  # All values greater than or equal the given value.
+  url_gte: String
+
+  # All values containing the given string.
+  url_contains: String
+
+  # All values not containing the given string.
+  url_not_contains: String
+
+  # All values starting with the given string.
+  url_starts_with: String
+
+  # All values not starting with the given string.
+  url_not_starts_with: String
+
+  # All values ending with the given string.
+  url_ends_with: String
+
+  # All values not ending with the given string.
+  url_not_ends_with: String
+  owner: UserFilter
+}
+
+enum FileOrderBy {
+  contentType_ASC
+  contentType_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  secret_ASC
+  secret_DESC
+  size_ASC
+  size_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  url_ASC
+  url_DESC
+}
+
+input FileownerUser {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
+  email: String
+  employedDate: DateTime
+  firstName: String
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
+  password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
+  websIds: [ID!]
+  webs: [UserwebsWeb!]
+}
+
+# LoggedInUserPayload
+type LoggedInUserPayload {
+  id: ID!
+}
+
+type Mutation {
+  createFile(input: CreateFileInput!): CreateFilePayload
+  createTimesheet(input: CreateTimesheetInput!): CreateTimesheetPayload
+  createWeb(input: CreateWebInput!): CreateWebPayload
+  updateFile(input: UpdateFileInput!): UpdateFilePayload
+  updateTimesheet(input: UpdateTimesheetInput!): UpdateTimesheetPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  updateWeb(input: UpdateWebInput!): UpdateWebPayload
+  updateOrCreateFile(input: UpdateOrCreateFileInput!): UpdateOrCreateFilePayload
+  updateOrCreateTimesheet(input: UpdateOrCreateTimesheetInput!): UpdateOrCreateTimesheetPayload
+  updateOrCreateUser(input: UpdateOrCreateUserInput!): UpdateOrCreateUserPayload
+  updateOrCreateWeb(input: UpdateOrCreateWebInput!): UpdateOrCreateWebPayload
+  deleteFile(input: DeleteFileInput!): DeleteFilePayload
+  deleteTimesheet(input: DeleteTimesheetInput!): DeleteTimesheetPayload
+  deleteUser(input: DeleteUserInput!): DeleteUserPayload
+  deleteWeb(input: DeleteWebInput!): DeleteWebPayload
+  setImageOwner(input: AddToImageOwnerUserInput!): SetImageOwnerPayload
+  unsetImageOwner(input: UnsetImageOwnerUserInput!): UnsetImageOwnerPayload
+  addToUserTimesheets(input: AddToUserTimesheetsUserInput!): AddToUserTimesheetsPayload
+  addToUserWebs(input: AddToUserWebsUserInput!): AddToUserWebsPayload
+  removeFromUserTimesheets(input: RemoveFromUserTimesheetsUserInput!): RemoveFromUserTimesheetsPayload
+  createUser(input: SignupUserInput!): CreateUserPayload!
+
+  # authenticate
+  authenticateUser(email: String!, password: String!): AuthenticateUserPayload
+
+  # signup
+  signupUser(email: String!, password: String!): SignupUserPayload
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type Query {
+  viewer: Viewer!
+
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
+}
+
+type RemoveFromUserTimesheetsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  userUser: User
+  timesheetsTimesheet: Timesheet
+  userUserEdge: UserEdge
+  timesheetsTimesheetEdge: TimesheetEdge
+}
+
+input RemoveFromUserTimesheetsUserInput {
+  timesheetsTimesheetId: ID!
+  userUserId: ID!
+  clientMutationId: String!
+}
+
+type SetImageOwnerPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  ownerUser: User
+  imageFile: File
+  ownerUserEdge: UserEdge
+  imageFileEdge: FileEdge
+}
+
+enum Shift {
+  MORNING
+  MID
+  GRAVEYARD
+}
+
+input SignupUserInput {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
+  email: String
+  employedDate: DateTime
+  firstName: String
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
+  password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  imageId: ID
+  image: UserimageFile
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
+  websIds: [ID!]
+  webs: [UserwebsWeb!]
+  clientMutationId: String!
+}
+
+# SignupUserPayload
+type SignupUserPayload {
+  id: ID!
+  token: String!
+}
+
+type Timesheet implements Node {
+  createdAt: DateTime!
+  id: ID!
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  updatedAt: DateTime!
+  user(filter: UserFilter): User
+  workday: DateTime
+}
+
+enum TimesheetCode {
+  R
+  OT
+  H
+  H1
+  V
+  L
+  L1
+  S
+  S1
+  A
+  A1
+}
+
+# A connection to a list of items.
+type TimesheetConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [TimesheetEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type TimesheetEdge {
+  # The item at the end of the edge.
+  node: Timesheet!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input TimesheetFilter {
+  # Logical AND on all given filters.
+  AND: [TimesheetFilter!]
+
+  # Logical OR on all given filters.
+  OR: [TimesheetFilter!]
+  createdAt: DateTime
+
+  # All values that are not equal to given value.
+  createdAt_not: DateTime
+
+  # All values that are contained in given list.
+  createdAt_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  createdAt_not_in: [DateTime!]
+
+  # All values less than the given value.
+  createdAt_lt: DateTime
+
+  # All values less than or equal the given value.
+  createdAt_lte: DateTime
+
+  # All values greater than the given value.
+  createdAt_gt: DateTime
+
+  # All values greater than or equal the given value.
+  createdAt_gte: DateTime
+  id: ID
+
+  # All values that are not equal to given value.
+  id_not: ID
+
+  # All values that are contained in given list.
+  id_in: [ID!]
+
+  # All values that are not contained in given list.
+  id_not_in: [ID!]
+
+  # All values less than the given value.
+  id_lt: ID
+
+  # All values less than or equal the given value.
+  id_lte: ID
+
+  # All values greater than the given value.
+  id_gt: ID
+
+  # All values greater than or equal the given value.
+  id_gte: ID
+
+  # All values containing the given string.
+  id_contains: ID
+
+  # All values not containing the given string.
+  id_not_contains: ID
+
+  # All values starting with the given string.
+  id_starts_with: ID
+
+  # All values not starting with the given string.
+  id_not_starts_with: ID
+
+  # All values ending with the given string.
+  id_ends_with: ID
+
+  # All values not ending with the given string.
+  id_not_ends_with: ID
+  rating: Int
+
+  # All values that are not equal to given value.
+  rating_not: Int
+
+  # All values that are contained in given list.
+  rating_in: [Int!]
+
+  # All values that are not contained in given list.
+  rating_not_in: [Int!]
+
+  # All values less than the given value.
+  rating_lt: Int
+
+  # All values less than or equal the given value.
+  rating_lte: Int
+
+  # All values greater than the given value.
+  rating_gt: Int
+
+  # All values greater than or equal the given value.
+  rating_gte: Int
+  remark: String
+
+  # All values that are not equal to given value.
+  remark_not: String
+
+  # All values that are contained in given list.
+  remark_in: [String!]
+
+  # All values that are not contained in given list.
+  remark_not_in: [String!]
+
+  # All values less than the given value.
+  remark_lt: String
+
+  # All values less than or equal the given value.
+  remark_lte: String
+
+  # All values greater than the given value.
+  remark_gt: String
+
+  # All values greater than or equal the given value.
+  remark_gte: String
+
+  # All values containing the given string.
+  remark_contains: String
+
+  # All values not containing the given string.
+  remark_not_contains: String
+
+  # All values starting with the given string.
+  remark_starts_with: String
+
+  # All values not starting with the given string.
+  remark_not_starts_with: String
+
+  # All values ending with the given string.
+  remark_ends_with: String
+
+  # All values not ending with the given string.
+  remark_not_ends_with: String
+  timeCode: TimesheetCode
+
+  # All values that are not equal to given value.
+  timeCode_not: TimesheetCode
+
+  # All values that are contained in given list.
+  timeCode_in: [TimesheetCode!]
+
+  # All values that are not contained in given list.
+  timeCode_not_in: [TimesheetCode!]
+  updatedAt: DateTime
+
+  # All values that are not equal to given value.
+  updatedAt_not: DateTime
+
+  # All values that are contained in given list.
+  updatedAt_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  updatedAt_not_in: [DateTime!]
+
+  # All values less than the given value.
+  updatedAt_lt: DateTime
+
+  # All values less than or equal the given value.
+  updatedAt_lte: DateTime
+
+  # All values greater than the given value.
+  updatedAt_gt: DateTime
+
+  # All values greater than or equal the given value.
+  updatedAt_gte: DateTime
+  workday: DateTime
+
+  # All values that are not equal to given value.
+  workday_not: DateTime
+
+  # All values that are contained in given list.
+  workday_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  workday_not_in: [DateTime!]
+
+  # All values less than the given value.
+  workday_lt: DateTime
+
+  # All values less than or equal the given value.
+  workday_lte: DateTime
+
+  # All values greater than the given value.
+  workday_gt: DateTime
+
+  # All values greater than or equal the given value.
+  workday_gte: DateTime
+  user: UserFilter
+}
+
+enum TimesheetOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  rating_ASC
+  rating_DESC
+  remark_ASC
+  remark_DESC
+  timeCode_ASC
+  timeCode_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  workday_ASC
+  workday_DESC
+}
+
+input TimesheetuserUser {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
+  email: String
+  employedDate: DateTime
+  firstName: String
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
+  password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  imageId: ID
+  image: UserimageFile
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
+  websIds: [ID!]
+  webs: [UserwebsWeb!]
+}
+
+type UnsetImageOwnerPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  ownerUser: User
+  imageFile: File
+  ownerUserEdge: UserEdge
+  imageFileEdge: FileEdge
+}
+
+input UnsetImageOwnerUserInput {
+  imageFileId: ID!
+  ownerUserId: ID!
+  clientMutationId: String!
+}
+
+input UpdateFile {
+  id: ID!
+  name: String
+  ownerId: ID
+  owner: FileownerUser
+}
+
+input UpdateFileInput {
+  id: ID!
+  name: String
+  ownerId: ID
+  owner: FileownerUser
+  clientMutationId: String!
+}
+
+type UpdateFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+  owner: User
+}
+
+input UpdateOrCreateFileInput {
+  update: UpdateFile!
+  create: CreateFile!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+  owner: User
+}
+
+input UpdateOrCreateTimesheetInput {
+  update: UpdateTimesheet!
+  create: CreateTimesheet!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateTimesheetPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  timesheet: Timesheet
+  edge: TimesheetEdge
+  user: User
+}
+
+input UpdateOrCreateUserInput {
+  update: UpdateUser!
+  create: CreateUser!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateUserPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  user: User
+  edge: UserEdge
+  image: File
+}
+
+input UpdateOrCreateWebInput {
+  update: UpdateWeb!
+  create: CreateWeb!
+  clientMutationId: String!
+}
+
+type UpdateOrCreateWebPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  web: Web
+  edge: WebEdge
+  owner: User
+}
+
+input UpdateTimesheet {
+  id: ID!
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  workday: DateTime
+  userId: ID
+  user: TimesheetuserUser
+}
+
+input UpdateTimesheetInput {
+  id: ID!
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  workday: DateTime
+  userId: ID
+  user: TimesheetuserUser
+  clientMutationId: String!
+}
+
+type UpdateTimesheetPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  timesheet: Timesheet
+  edge: TimesheetEdge
+  user: User
+}
+
+input UpdateUser {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
+  email: String
+  employedDate: DateTime
+  firstName: String
+  id: ID!
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
+  password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  imageId: ID
+  image: UserimageFile
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
+  websIds: [ID!]
+  webs: [UserwebsWeb!]
+}
+
+input UpdateUserInput {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
+  email: String
+  employedDate: DateTime
+  firstName: String
+  id: ID!
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
+  password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  imageId: ID
+  image: UserimageFile
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
+  websIds: [ID!]
+  webs: [UserwebsWeb!]
+  clientMutationId: String!
+}
+
+type UpdateUserPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  user: User
+  edge: UserEdge
+  image: File
+}
+
+input UpdateWeb {
+  domain: String
+  id: ID!
+  name: String
+  ownerId: ID
+  owner: WebownerUser
+}
+
+input UpdateWebInput {
+  domain: String
+  id: ID!
+  name: String
+  ownerId: ID
+  owner: WebownerUser
+  clientMutationId: String!
+}
+
+type UpdateWebPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  web: Web
+  edge: WebEdge
+  owner: User
+}
+
+type User implements Node {
+  branch: Branch
+  cellPhone: String
+  createdAt: DateTime!
+  dateOfBirth: DateTime
+  department: Department
+  email: String
+  employedDate: DateTime
+  firstName: String
+  id: ID!
+  idCardNumber: String
+  image(filter: FileFilter): File
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
+  password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  timesheets(filter: TimesheetFilter, orderBy: TimesheetOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TimesheetConnection
+  updatedAt: DateTime!
+  vacation: Int
+  webs(filter: WebFilter, orderBy: WebOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): WebConnection
+}
+
+# A connection to a list of items.
+type UserConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type UserEdge {
+  # The item at the end of the edge.
+  node: User!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input UserFilter {
+  # Logical AND on all given filters.
+  AND: [UserFilter!]
+
+  # Logical OR on all given filters.
+  OR: [UserFilter!]
+  branch: Branch
+
+  # All values that are not equal to given value.
+  branch_not: Branch
+
+  # All values that are contained in given list.
+  branch_in: [Branch!]
+
+  # All values that are not contained in given list.
+  branch_not_in: [Branch!]
+  cellPhone: String
+
+  # All values that are not equal to given value.
+  cellPhone_not: String
+
+  # All values that are contained in given list.
+  cellPhone_in: [String!]
+
+  # All values that are not contained in given list.
+  cellPhone_not_in: [String!]
+
+  # All values less than the given value.
+  cellPhone_lt: String
+
+  # All values less than or equal the given value.
+  cellPhone_lte: String
+
+  # All values greater than the given value.
+  cellPhone_gt: String
+
+  # All values greater than or equal the given value.
+  cellPhone_gte: String
+
+  # All values containing the given string.
+  cellPhone_contains: String
+
+  # All values not containing the given string.
+  cellPhone_not_contains: String
+
+  # All values starting with the given string.
+  cellPhone_starts_with: String
+
+  # All values not starting with the given string.
+  cellPhone_not_starts_with: String
+
+  # All values ending with the given string.
+  cellPhone_ends_with: String
+
+  # All values not ending with the given string.
+  cellPhone_not_ends_with: String
+  createdAt: DateTime
+
+  # All values that are not equal to given value.
+  createdAt_not: DateTime
+
+  # All values that are contained in given list.
+  createdAt_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  createdAt_not_in: [DateTime!]
+
+  # All values less than the given value.
+  createdAt_lt: DateTime
+
+  # All values less than or equal the given value.
+  createdAt_lte: DateTime
+
+  # All values greater than the given value.
+  createdAt_gt: DateTime
+
+  # All values greater than or equal the given value.
+  createdAt_gte: DateTime
+  dateOfBirth: DateTime
+
+  # All values that are not equal to given value.
+  dateOfBirth_not: DateTime
+
+  # All values that are contained in given list.
+  dateOfBirth_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  dateOfBirth_not_in: [DateTime!]
+
+  # All values less than the given value.
+  dateOfBirth_lt: DateTime
+
+  # All values less than or equal the given value.
+  dateOfBirth_lte: DateTime
+
+  # All values greater than the given value.
+  dateOfBirth_gt: DateTime
+
+  # All values greater than or equal the given value.
+  dateOfBirth_gte: DateTime
+  department: Department
+
+  # All values that are not equal to given value.
+  department_not: Department
+
+  # All values that are contained in given list.
+  department_in: [Department!]
+
+  # All values that are not contained in given list.
+  department_not_in: [Department!]
+  email: String
+
+  # All values that are not equal to given value.
+  email_not: String
+
+  # All values that are contained in given list.
+  email_in: [String!]
+
+  # All values that are not contained in given list.
+  email_not_in: [String!]
+
+  # All values less than the given value.
+  email_lt: String
+
+  # All values less than or equal the given value.
+  email_lte: String
+
+  # All values greater than the given value.
+  email_gt: String
+
+  # All values greater than or equal the given value.
+  email_gte: String
+
+  # All values containing the given string.
+  email_contains: String
+
+  # All values not containing the given string.
+  email_not_contains: String
+
+  # All values starting with the given string.
+  email_starts_with: String
+
+  # All values not starting with the given string.
+  email_not_starts_with: String
+
+  # All values ending with the given string.
+  email_ends_with: String
+
+  # All values not ending with the given string.
+  email_not_ends_with: String
+  employedDate: DateTime
+
+  # All values that are not equal to given value.
+  employedDate_not: DateTime
+
+  # All values that are contained in given list.
+  employedDate_in: [DateTime!]
+
+  # All values that are not contained in given list.
+  employedDate_not_in: [DateTime!]
+
+  # All values less than the given value.
+  employedDate_lt: DateTime
+
+  # All values less than or equal the given value.
+  employedDate_lte: DateTime
+
+  # All values greater than the given value.
+  employedDate_gt: DateTime
+
+  # All values greater than or equal the given value.
+  employedDate_gte: DateTime
+  firstName: String
+
+  # All values that are not equal to given value.
+  firstName_not: String
+
+  # All values that are contained in given list.
+  firstName_in: [String!]
+
+  # All values that are not contained in given list.
+  firstName_not_in: [String!]
+
+  # All values less than the given value.
+  firstName_lt: String
+
+  # All values less than or equal the given value.
+  firstName_lte: String
+
+  # All values greater than the given value.
+  firstName_gt: String
+
+  # All values greater than or equal the given value.
+  firstName_gte: String
+
+  # All values containing the given string.
+  firstName_contains: String
+
+  # All values not containing the given string.
+  firstName_not_contains: String
+
+  # All values starting with the given string.
+  firstName_starts_with: String
+
+  # All values not starting with the given string.
+  firstName_not_starts_with: String
+
+  # All values ending with the given string.
+  firstName_ends_with: String
+
+  # All values not ending with the given string.
+  firstName_not_ends_with: String
+  id: ID
+
+  # All values that are not equal to given value.
+  id_not: ID
+
+  # All values that are contained in given list.
+  id_in: [ID!]
+
+  # All values that are not contained in given list.
+  id_not_in: [ID!]
+
+  # All values less than the given value.
+  id_lt: ID
+
+  # All values less than or equal the given value.
+  id_lte: ID
+
+  # All values greater than the given value.
+  id_gt: ID
+
+  # All values greater than or equal the given value.
+  id_gte: ID
+
+  # All values containing the given string.
+  id_contains: ID
+
+  # All values not containing the given string.
+  id_not_contains: ID
+
+  # All values starting with the given string.
+  id_starts_with: ID
+
+  # All values not starting with the given string.
+  id_not_starts_with: ID
+
+  # All values ending with the given string.
+  id_ends_with: ID
+
+  # All values not ending with the given string.
+  id_not_ends_with: ID
+  idCardNumber: String
+
+  # All values that are not equal to given value.
+  idCardNumber_not: String
+
+  # All values that are contained in given list.
+  idCardNumber_in: [String!]
+
+  # All values that are not contained in given list.
+  idCardNumber_not_in: [String!]
+
+  # All values less than the given value.
+  idCardNumber_lt: String
+
+  # All values less than or equal the given value.
+  idCardNumber_lte: String
+
+  # All values greater than the given value.
+  idCardNumber_gt: String
+
+  # All values greater than or equal the given value.
+  idCardNumber_gte: String
+
+  # All values containing the given string.
+  idCardNumber_contains: String
+
+  # All values not containing the given string.
+  idCardNumber_not_contains: String
+
+  # All values starting with the given string.
+  idCardNumber_starts_with: String
+
+  # All values not starting with the given string.
+  idCardNumber_not_starts_with: String
+
+  # All values ending with the given string.
+  idCardNumber_ends_with: String
+
+  # All values not ending with the given string.
+  idCardNumber_not_ends_with: String
+  lastName: String
+
+  # All values that are not equal to given value.
+  lastName_not: String
+
+  # All values that are contained in given list.
+  lastName_in: [String!]
+
+  # All values that are not contained in given list.
+  lastName_not_in: [String!]
+
+  # All values less than the given value.
+  lastName_lt: String
+
+  # All values less than or equal the given value.
+  lastName_lte: String
+
+  # All values greater than the given value.
+  lastName_gt: String
+
+  # All values greater than or equal the given value.
+  lastName_gte: String
+
+  # All values containing the given string.
+  lastName_contains: String
+
+  # All values not containing the given string.
+  lastName_not_contains: String
+
+  # All values starting with the given string.
+  lastName_starts_with: String
+
+  # All values not starting with the given string.
+  lastName_not_starts_with: String
+
+  # All values ending with the given string.
+  lastName_ends_with: String
+
+  # All values not ending with the given string.
+  lastName_not_ends_with: String
+  leaveWithPay: Int
+
+  # All values that are not equal to given value.
+  leaveWithPay_not: Int
+
+  # All values that are contained in given list.
+  leaveWithPay_in: [Int!]
+
+  # All values that are not contained in given list.
+  leaveWithPay_not_in: [Int!]
+
+  # All values less than the given value.
+  leaveWithPay_lt: Int
+
+  # All values less than or equal the given value.
+  leaveWithPay_lte: Int
+
+  # All values greater than the given value.
+  leaveWithPay_gt: Int
+
+  # All values greater than or equal the given value.
+  leaveWithPay_gte: Int
+  nickName: String
+
+  # All values that are not equal to given value.
+  nickName_not: String
+
+  # All values that are contained in given list.
+  nickName_in: [String!]
+
+  # All values that are not contained in given list.
+  nickName_not_in: [String!]
+
+  # All values less than the given value.
+  nickName_lt: String
+
+  # All values less than or equal the given value.
+  nickName_lte: String
+
+  # All values greater than the given value.
+  nickName_gt: String
+
+  # All values greater than or equal the given value.
+  nickName_gte: String
+
+  # All values containing the given string.
+  nickName_contains: String
+
+  # All values not containing the given string.
+  nickName_not_contains: String
+
+  # All values starting with the given string.
+  nickName_starts_with: String
+
+  # All values not starting with the given string.
+  nickName_not_starts_with: String
+
+  # All values ending with the given string.
+  nickName_ends_with: String
+
+  # All values not ending with the given string.
+  nickName_not_ends_with: String
   password: String
 
   # All values that are not equal to given value.
@@ -410,6 +1665,106 @@ input UserFilter {
 
   # All values not ending with the given string.
   password_not_ends_with: String
+  role: UserRole
+
+  # All values that are not equal to given value.
+  role_not: UserRole
+
+  # All values that are contained in given list.
+  role_in: [UserRole!]
+
+  # All values that are not contained in given list.
+  role_not_in: [UserRole!]
+  savingsAccountID: String
+
+  # All values that are not equal to given value.
+  savingsAccountID_not: String
+
+  # All values that are contained in given list.
+  savingsAccountID_in: [String!]
+
+  # All values that are not contained in given list.
+  savingsAccountID_not_in: [String!]
+
+  # All values less than the given value.
+  savingsAccountID_lt: String
+
+  # All values less than or equal the given value.
+  savingsAccountID_lte: String
+
+  # All values greater than the given value.
+  savingsAccountID_gt: String
+
+  # All values greater than or equal the given value.
+  savingsAccountID_gte: String
+
+  # All values containing the given string.
+  savingsAccountID_contains: String
+
+  # All values not containing the given string.
+  savingsAccountID_not_contains: String
+
+  # All values starting with the given string.
+  savingsAccountID_starts_with: String
+
+  # All values not starting with the given string.
+  savingsAccountID_not_starts_with: String
+
+  # All values ending with the given string.
+  savingsAccountID_ends_with: String
+
+  # All values not ending with the given string.
+  savingsAccountID_not_ends_with: String
+  savingsBank: String
+
+  # All values that are not equal to given value.
+  savingsBank_not: String
+
+  # All values that are contained in given list.
+  savingsBank_in: [String!]
+
+  # All values that are not contained in given list.
+  savingsBank_not_in: [String!]
+
+  # All values less than the given value.
+  savingsBank_lt: String
+
+  # All values less than or equal the given value.
+  savingsBank_lte: String
+
+  # All values greater than the given value.
+  savingsBank_gt: String
+
+  # All values greater than or equal the given value.
+  savingsBank_gte: String
+
+  # All values containing the given string.
+  savingsBank_contains: String
+
+  # All values not containing the given string.
+  savingsBank_not_contains: String
+
+  # All values starting with the given string.
+  savingsBank_starts_with: String
+
+  # All values not starting with the given string.
+  savingsBank_not_starts_with: String
+
+  # All values ending with the given string.
+  savingsBank_ends_with: String
+
+  # All values not ending with the given string.
+  savingsBank_not_ends_with: String
+  shift: Shift
+
+  # All values that are not equal to given value.
+  shift_not: Shift
+
+  # All values that are contained in given list.
+  shift_in: [Shift!]
+
+  # All values that are not contained in given list.
+  shift_not_in: [Shift!]
   updatedAt: DateTime
 
   # All values that are not equal to given value.
@@ -432,22 +1787,95 @@ input UserFilter {
 
   # All values greater than or equal the given value.
   updatedAt_gte: DateTime
+  vacation: Int
+
+  # All values that are not equal to given value.
+  vacation_not: Int
+
+  # All values that are contained in given list.
+  vacation_in: [Int!]
+
+  # All values that are not contained in given list.
+  vacation_not_in: [Int!]
+
+  # All values less than the given value.
+  vacation_lt: Int
+
+  # All values less than or equal the given value.
+  vacation_lte: Int
+
+  # All values greater than the given value.
+  vacation_gt: Int
+
+  # All values greater than or equal the given value.
+  vacation_gte: Int
+  image: FileFilter
+  timesheets_every: TimesheetFilter
+  timesheets_some: TimesheetFilter
+  timesheets_none: TimesheetFilter
   webs_every: WebFilter
   webs_some: WebFilter
   webs_none: WebFilter
 }
 
+input UserimageFile {
+  name: String!
+}
+
 enum UserOrderBy {
+  branch_ASC
+  branch_DESC
+  cellPhone_ASC
+  cellPhone_DESC
   createdAt_ASC
   createdAt_DESC
+  dateOfBirth_ASC
+  dateOfBirth_DESC
+  department_ASC
+  department_DESC
   email_ASC
   email_DESC
+  employedDate_ASC
+  employedDate_DESC
+  firstName_ASC
+  firstName_DESC
   id_ASC
   id_DESC
+  idCardNumber_ASC
+  idCardNumber_DESC
+  lastName_ASC
+  lastName_DESC
+  leaveWithPay_ASC
+  leaveWithPay_DESC
+  nickName_ASC
+  nickName_DESC
   password_ASC
   password_DESC
+  role_ASC
+  role_DESC
+  savingsAccountID_ASC
+  savingsAccountID_DESC
+  savingsBank_ASC
+  savingsBank_DESC
+  shift_ASC
+  shift_DESC
   updatedAt_ASC
   updatedAt_DESC
+  vacation_ASC
+  vacation_DESC
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+  MANAGER
+}
+
+input UsertimesheetsTimesheet {
+  rating: Int
+  remark: String
+  timeCode: TimesheetCode
+  workday: DateTime
 }
 
 input UserwebsWeb {
@@ -457,11 +1885,15 @@ input UserwebsWeb {
 
 # This is the famous Relay viewer object
 type Viewer {
+  allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+  allTimesheets(filter: TimesheetFilter, orderBy: TimesheetOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TimesheetConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   allWebs(filter: WebFilter, orderBy: WebOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): WebConnection!
   user: User
+  File(id: ID, secret: String, url: String): File
+  Timesheet(id: ID): Timesheet
   User(email: String, id: ID): User
-  Web(id: ID): Web
+  Web(domain: String, id: ID): Web
 
   # loggedInUser
   loggedInUser: LoggedInUserPayload
@@ -685,8 +2117,27 @@ enum WebOrderBy {
 }
 
 input WebownerUser {
+  branch: Branch
+  cellPhone: String
+  dateOfBirth: DateTime
+  department: Department
   email: String
+  employedDate: DateTime
+  firstName: String
+  idCardNumber: String
+  lastName: String
+  leaveWithPay: Int
+  nickName: String
   password: String
+  role: UserRole
+  savingsAccountID: String
+  savingsBank: String
+  shift: Shift
+  vacation: Int
+  imageId: ID
+  image: UserimageFile
+  timesheetsIds: [ID!]
+  timesheets: [UsertimesheetsTimesheet!]
   websIds: [ID!]
   webs: [UserwebsWeb!]
 }

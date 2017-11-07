@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6cfe71aa86afe71a99b07f92a6945fa7
+ * @relayHash 2626e6491e3a1ca109b9ac511e93c07d
  */
 
 /* eslint-disable */
@@ -15,8 +15,34 @@ export type CreateWebMutationVariables = {|
     name: string;
     ownerId?: ?string;
     owner?: ?{
+      branch?: ?"BAN_KOH" | "SAVE_ONE" | "KHON_KHAN";
+      cellPhone?: ?string;
+      dateOfBirth?: ?any;
+      department?: ?"SERVER" | "KITCHEN" | "DISHWASHER" | "DAILY" | "MANAGER" | "OWNER";
       email?: ?string;
+      employedDate?: ?any;
+      firstName?: ?string;
+      idCardNumber?: ?string;
+      lastName?: ?string;
+      leaveWithPay?: ?number;
+      nickName?: ?string;
       password?: ?string;
+      role?: ?"ADMIN" | "STAFF" | "MANAGER";
+      savingsAccountID?: ?string;
+      savingsBank?: ?string;
+      shift?: ?"MORNING" | "MID" | "GRAVEYARD";
+      vacation?: ?number;
+      imageId?: ?string;
+      image?: ?{
+        name: string;
+      };
+      timesheetsIds?: ?$ReadOnlyArray<string>;
+      timesheets?: ?$ReadOnlyArray<{
+        rating?: ?number;
+        remark?: ?string;
+        timeCode?: ?"R" | "OT" | "H" | "H1" | "V" | "L" | "L1" | "S" | "S1" | "A" | "A1";
+        workday?: ?any;
+      }>;
       websIds?: ?$ReadOnlyArray<string>;
       webs?: ?$ReadOnlyArray<{
         domain: string;
