@@ -18,7 +18,10 @@ export type LocaleLinkBaseProps = {
 
 type LocaleLinkProps = LocaleLinkBaseProps & { children: React.Element<any> };
 
-const maybeAddLocaleToHref = (defaultLocale, locale, href) => {
+// href: any, because Href does not specify query locale, and that's right.
+// query locale is an implementation detail. Unfortunately, I don't know why
+// Flow checks it here. Therefore, I had to disable type checking via any type.
+const maybeAddLocaleToHref = (defaultLocale, locale, href: any) => {
   if (typeof href === 'string') return href;
   const isAppLink = href.pathname.charAt(0) === '/';
   const isDefault = defaultLocale === locale;
@@ -35,19 +38,19 @@ const maybeAddLocaleToHref = (defaultLocale, locale, href) => {
 
 const LocaleLink = ({
   children,
-  // $FlowFixMe Href does not define query locale.
-  href,
+  href: hrefWithoutLocale,
   prefetch,
   replace,
   locale,
   defaultLocale,
 }) => {
-  const localeHref = maybeAddLocaleToHref(defaultLocale, locale, href);
+  const href = maybeAddLocaleToHref(defaultLocale, locale, hrefWithoutLocale);
   return (
-    <NextLink href={localeHref} prefetch={prefetch} replace={replace}>
+    <NextLink href={href} prefetch={prefetch} replace={replace}>
       {/* Add href manually because Next.js does it only for browser anchor. */}
+      {/* Ensure href is string because custom components. */}
       {React.cloneElement(children, {
-        href: typeof localeHref === 'object' ? format(localeHref) : localeHref,
+        href: typeof href === 'object' ? format(href) : href,
       })}
     </NextLink>
   );
