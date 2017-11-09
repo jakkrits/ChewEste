@@ -15,6 +15,8 @@ const localeToLanguageName = locale => {
       return 'čeština';
     case 'en':
       return 'english';
+    case 'th':
+      return 'ภาษาไทย';
     default:
       return locale;
   }
