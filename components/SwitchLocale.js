@@ -11,8 +11,6 @@ const getLocaleHref = (pathname, defaultLocale, locale) => {
 
 const localeToLanguageName = locale => {
   switch (locale) {
-    case 'cs':
-      return 'čeština';
     case 'en':
       return 'english';
     case 'th':
